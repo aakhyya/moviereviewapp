@@ -24,21 +24,16 @@ const userSchema=new mongoose.Schema({
     }
 },
 {
-    timestamps:true
+    timestamps:true,
 });
 
 //Runs before anything is saved in mongodb, 
 //we do this to avoid saving plain text password anywhere, 
 //not even in MongoDB.
-userSchema.pre("save", async function(next){
-    if(!this.isModified("password")) return next(); //Re-Hash only if password modified
-    try{
-        this.password=await bcrypt.hash(this.password,10); //password,saltRounds : Higher, more secure, slower
-        next();
-    }
-    catch(err){
-        next(err);
-    }
+userSchema.pre("save", async function(){
+    if(!this.isModified("password")) return; //Re-Hash only if password modified
+    this.password=await bcrypt.hash(this.password,10); //password,saltRounds : Higher, more secure, slower
+    
 });
 
 userSchema.methods.matchPassword=async function(userpassword){
