@@ -1,5 +1,6 @@
 const User=require("../models/user");
 const jwt=require("jsonwebtoken");
+
 async function signupController(req,res) {
     try{
         const {name, email, password} = req.body;
