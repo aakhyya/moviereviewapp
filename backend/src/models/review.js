@@ -23,8 +23,16 @@ const reviewSchema=mongoose.Schema({
     },
     status:{
         type:String,
-        enum: ["draft", "in-review", "published", "archived"],
+        enum: ["draft", "in-review", "published", "archived", "rejected"],
         default: "draft"
+    },
+    rejectedreason:{
+        type:String,
+        trim:true
+    },
+    rejectedby:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
     },
 },{
     timestamps:true,
