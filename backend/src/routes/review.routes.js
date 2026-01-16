@@ -11,11 +11,13 @@ const {
     getPublishedReviews,
     rejectReview,
     getRejectedreviews,
-    resubmitReview
+    resubmitReview,
+    getReviewbyId
 }=require("../controllers/review.controllers")
 
 //anyone
 router.get("/", getPublishedReviews);
+router.get("/:id", getReviewbyId);
 
 //critic
 router.post("/", requireAuth,requireRole("critic"),createReview);

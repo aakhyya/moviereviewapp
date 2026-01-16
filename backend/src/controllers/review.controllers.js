@@ -3,7 +3,6 @@ const Review=require("../models/review");
 //CRITIC
 //1. draft
 async function createReview(req,res) {
-    console.log("REQ.USER →", req.user);
     const {movietitle,content,rating}=req.body;
     if(!movietitle || !content || !rating){
         return res.status(400).json({
@@ -150,12 +149,27 @@ async function archiveReview(req,res){
 async function getPublishedReviews(req,res){
     const reviews=await Review.find({status:"published"})
                             .populate("author","name");
-    // Take the author ObjectId, go to the User collection,
-    // find the matching user, and replace the ID with selected user fields,
-    // we write "name" specifically, so that other fields of user don't return.
     return res.json(reviews);   
 }
 
-module.exports={getPublishedReviews,
+//ANALYTICS
+//1. Increment when a review is read
+async function getReviewbyId(req,res){
+    const review=await Review.findOne({
+        _id:req.params.id,
+        status:"published"
+    }).populate("author","name");
+    if(!review){
+        return res.status(404).json({
+            error:"Review not found!"
+        });
+    }
+    review.views+=1;
+    await review.save();
+
+    return res.json(review);
+}
+
+module.exports={getPublishedReviews, getReviewbyId,
                 approveReview,archiveReview,rejectReview,
                 createReview,submitReview,getRejectedreviews,resubmitReview};
