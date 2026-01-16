@@ -1,4 +1,5 @@
 const User=require("../models/user");
+const Audit=require("../models/auditlog");
 const jwt=require("jsonwebtoken");
 
 async function signupController(req,res) {
@@ -19,6 +20,15 @@ async function signupController(req,res) {
             name,
             email,
             password
+        });
+        await Audit.create({
+            actor: user._id,
+            action: "USER_SIGNUP",
+            entityType: "User",
+            entityId: user._id,
+            metadata: {
+                role: user.role
+            }
         });
         return res.status(201).json({
             status:"New user created",

@@ -1,4 +1,5 @@
 const Review=require("../models/review");
+const Audit=require("../models/auditlog");
 
 //CRITIC
 //1. draft
@@ -34,6 +35,15 @@ async function submitReview(req,res) {
 
     review.status="in-review";
     await review.save();
+    await Audit.create({
+        actor:req.user.id,
+        action:"REVIEW_SUBMITTED",
+        entityType:"Review",
+        entityId:review._id,
+        metadata:{
+            previousStatus:"draft"
+        }
+    });
     return res.json({
         message:"Draft is in-review stage."
     });
@@ -44,13 +54,10 @@ async function getRejectedreviews(req,res){
         author:req.user.id,
         status:"rejected"
     }).populate("rejectedby","name");
-    if(!reviews){
-        return res.status(404).json({
-            error:"No rejected reviews!"
-        });
+    if (reviews.length === 0) {
+        return res.json([]);
     }
     return res.json(reviews);
-
 }
 //4. resubmit their rejected reviews
 async function resubmitReview(req,res){
@@ -73,7 +80,15 @@ async function resubmitReview(req,res){
 
     review.status="in-review";
     await review.save();
-
+    await Audit.create({
+        actor:req.user.id,
+        action:"REVIEW_RESUBMITTED",
+        entityType:"Review",
+        entityId:review._id,
+        metadata:{
+            previousStatus:"rejected"
+        }
+    });
     return res.json({
         message:"Review resubmitted for review."
     });
@@ -96,6 +111,15 @@ async function approveReview(req,res){
     }
     review.status="published";
     await review.save();
+    await Audit.create({
+        actor:req.user.id,
+        action:"REVIEW_APPROVED",
+        entityType:"Review",
+        entityId:review._id,
+        metadata:{
+            previousStatus:"in-review"
+        }
+    });
     return res.json({
         message:"Review is published"
     });
@@ -124,6 +148,15 @@ async function rejectReview(req,res){
     review.rejectedreason=reason;
     review.rejectedby=req.user.id;
     await review.save();
+    await Audit.create({
+        actor:req.user.id,
+        action:"REVIEW_REJECTED",
+        entityType:"Review",
+        entityId:review._id,
+        metadata:{
+            reason
+        }
+    });
     return res.json({
         message:"Review rejected with feedback!"
     });
@@ -139,6 +172,15 @@ async function archiveReview(req,res){
 
     review.status="archived";
     await review.save();
+    await Audit.create({
+        actor:req.user.id,
+        action:"REVIEW_ARCHIVED",
+        entityType:"Review",
+        entityId:review._id,
+        metadata:{
+            previousStatus:"published"
+        }
+    });
     return res.json({
         message:"Review is archived"
     });

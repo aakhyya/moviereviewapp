@@ -47,3 +47,14 @@ JWT Authentication
 React
 Context API
 Role-based UI rendering
+
+V. Audit Logs
+1) Auth/User:
+User signup
+Role change (later)
+
+2) Reviews:
+Review submitted for review
+Review approved
+Review rejected (with reason)
+Review archived
