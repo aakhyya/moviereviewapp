@@ -19,7 +19,8 @@ app.use("/api/analytics",analyticsroute);
 app.use("/api/audit",auditroute);
 module.exports=app;
 
-//1. test test@gm.com 12345 : viewer
-//2. critic1 critic1@gmail.com 123 : critic
-//3. critic2 critic2@gmail.com 123 : critic
-//4. editor editor@gmail.com 123 : editor
+//1. test test@gm.com 123 : viewer
+//2. test2 test2@gm.com 123: viewer
+//3. critic1 critic1@gmail.com 123 : critic
+//4. critic2 critic2@gmail.com 123 : critic
+//5. editor editor@gmail.com 123 : editor
