@@ -5,9 +5,14 @@ export default {
     "./src/**/*.{js,jsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        velvet: "#53161D",
+        ivory: "#ECE7DC",
+      }
+    },
   },
-  darkMode:"class", //control dark mode manually
   plugins: [],
 };
+
 

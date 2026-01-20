@@ -10,7 +10,7 @@ function StatusBadge({status}){
     const label=status.charAt(0).toUpperCase()+status.slice(1).replace("-"," ");
 
     return(
-        <span className={`text-sm px-4 py-2 rounded-full ${styles[status]}`}>
+        <span className={`text-xs px-3 py-1 rounded-full bg-velvet/10 text-velvetfont-medium ${styles[status]}`}>
             {label}
         </span>
     );
