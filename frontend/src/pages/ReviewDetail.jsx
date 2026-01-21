@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 function ReviewDetail(){
     const {id}=useParams();
     const [review, setReview]=useState(null);
     const [loading,setLoading]=useState(true);
     const navigate=useNavigate();
+
+    const {role}=useAuth();
 
     useEffect(()=>{
         async function fetchReview() {
@@ -78,6 +81,33 @@ function ReviewDetail(){
                     {review.content}
                     </p>
                 </div>
+            </div>
+
+            <div className="flex gap-4 mt-6">
+            {/* CRITIC */}
+            {role === "critic" && review.status === "draft" && (
+                <button className="px-4 py-2 bg-velvet text-ivory rounded">
+                Submit for review
+                </button>
+            )}
+
+            {role === "critic" && review.status === "rejected" && (
+                <button className="px-4 py-2 bg-velvet text-ivory rounded">
+                Resubmit
+                </button>
+            )}
+
+            {/* EDITOR */}
+            {role === "editor" && review.status === "in-review" && (
+                <>
+                <button className="px-4 py-2 bg-green-700 text-white rounded">
+                    Approve
+                </button>
+                <button className="px-4 py-2 bg-red-700 text-white rounded">
+                    Reject
+                </button>
+                </>
+            )}
             </div>
         </div>
     );
