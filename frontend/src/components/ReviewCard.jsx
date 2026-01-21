@@ -3,7 +3,7 @@ import StatusBadge from "./StatusBadge";
 function ReviewCard({id, title,author,rating,views,status,posterUrl}){
     return(
         <Link to={`/review/${id}`} className="block">
-        <div className=" bg-velvet text-ivory rounded-xl hover:shadow-md cursor-pointer p-5 space-y-3 hover:-translate-y-1 transition-transform">
+        <div className=" bg-velvet/90 text-ivory hover:bg-velvet rounded-xl cursor-pointer p-5 space-y-3 hover:-translate-y-1 transition-transform duration-200 ease-out">
             <div className="w-full rounded-md bg-zinc-800 overflow-hidden aspect-[2/3]">
                 <img
                     src={posterUrl}

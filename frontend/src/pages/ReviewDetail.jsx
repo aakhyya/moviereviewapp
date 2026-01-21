@@ -52,7 +52,7 @@ function ReviewDetail(){
                 <img
                 src="https://upload.wikimedia.org/wikipedia/commons/4/40/Jaws_movie_poster.jpg"
                 alt={review.movietitle}
-                className="absolute inset-0 w-full h-full  bg-velvet opacity-90 object-cover blur-md scale-100 "
+                className="absolute inset-0 w-full h-full  bg-velvet opacity-90 object-cover blur-sm scale-100 "
                 />
 
                 <div className="relative h-full p-8 flex flex-col justify-end bg-gradient-to-t from-zinc-950/90 via-zinc-950/60 to-transparent text-ivory">
@@ -64,7 +64,7 @@ function ReviewDetail(){
                         by {review.author.name}
                     </p>
 
-                    <div className="flex gap-6 text-sm text-zinc-400 mt-4">
+                    <div className="flex gap-6 text-sm text-zinc-300 mt-6">
                         <span>⭐ {review.rating} / 10</span>
                         <span>👁 {review.views} views</span>
                         <span className="capitalize">{review.status}</span>
@@ -72,10 +72,12 @@ function ReviewDetail(){
                 </div>
             </div>
 
-            <div className="border-t border-zinc-800 pt-6">
-                <p className="text-velvet leading-relaxed whitespace-pre-line font-mono">
-                {review.content}
-                </p>
+            <div className="bg-ivory p-10 shadow-lg rounded-xl">
+                <div className="border-t border-black/10 pt-6">
+                    <p className="text-velvet leading-snug whitespace-pre-line font-mono">
+                    {review.content}
+                    </p>
+                </div>
             </div>
         </div>
     );

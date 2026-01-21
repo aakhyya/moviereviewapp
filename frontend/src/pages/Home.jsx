@@ -24,6 +24,8 @@ function Home(){
     }, []);
 
     return(
+        
+        <div className="bg-ivory p-10 shadow-lg rounded-xl">
         <div className="grid 
                         grid-cols-1
                         sm:grid-cols-2
@@ -54,6 +56,7 @@ function Home(){
                 />))
             )
             }
+        </div>
         </div>
     );
 }

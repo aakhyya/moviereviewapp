@@ -8,6 +8,7 @@ function App() {
   return (
     <div className="min-h-screen bg-ivory text-zinc-900">
       <Navbar/>
+      
       <main className="max-w-5xl mx-auto p-6">
         <Routes>
           <Route path="/" element={<Home/>}/>
