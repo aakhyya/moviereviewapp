@@ -1,6 +1,5 @@
 const Review=require("../models/review");
 const Audit=require("../models/auditlog");
-
 //CRITIC
 //1. draft
 async function createReview(req,res) {
@@ -48,18 +47,30 @@ async function submitReview(req,res) {
         message:"Draft is in-review stage."
     });
 }
-//3. see their rejected reviews
-async function getRejectedreviews(req,res){
+//3. see my own reviews
+async function getMyReviews(req,res){
     const reviews=await Review.find({
-        author:req.user.id,
-        status:"rejected"
-    }).populate("rejectedby","name");
+        author:req.user.id
+    }).sort({createdAt:-1});
+
     if (reviews.length === 0) {
         return res.json([]);
     }
-    return res.json(reviews);
+
+    res.json(reviews);
 }
-//4. resubmit their rejected reviews
+//4. see their rejected reviews
+    async function getRejectedreviews(req,res){
+        const reviews=await Review.find({
+            author:req.user.id,
+            status:"rejected"
+        }).populate("rejectedby","name");
+        if (reviews.length === 0) {
+            return res.json([]);
+        }
+        return res.json(reviews);
+    }
+//5. resubmit their rejected reviews
 async function resubmitReview(req,res){
     const review=await Review.findById(req.params.id);
     if(!review){
@@ -185,6 +196,15 @@ async function archiveReview(req,res){
         message:"Review is archived"
     });
 }
+//4. get in-review reviews
+async function getInReviews(req,res){
+    const reviews = await Review.find({ status: "in-review" })
+                                .populate("author", "name");
+    if (!reviews === 0) {
+            return res.json([]);
+    }
+    res.json(reviews);
+}
 
 //VIEWERS
 //1. read published drafts
@@ -213,5 +233,5 @@ async function getReviewbyId(req,res){
 }
 
 module.exports={getPublishedReviews, getReviewbyId,
-                approveReview,archiveReview,rejectReview,
-                createReview,submitReview,getRejectedreviews,resubmitReview};
+                approveReview,archiveReview,rejectReview,getInReviews,
+                createReview,submitReview,getMyReviews,getRejectedreviews,resubmitReview};

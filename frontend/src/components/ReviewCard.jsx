@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import StatusBadge from "./StatusBadge";
-function ReviewCard({id, title,author,rating,views,status,posterUrl}){
+function ReviewCard({id, title,author,rating,views,status,posterUrl,
+                    showActions=false,onSubmit,onResubmit})
+    {
     return(
         <Link to={`/review/${id}`} className="block">
         <div className=" bg-velvet/90 text-ivory hover:bg-velvet rounded-xl cursor-pointer p-5 space-y-3 hover:-translate-y-1 transition-transform duration-200 ease-out">
@@ -25,6 +27,34 @@ function ReviewCard({id, title,author,rating,views,status,posterUrl}){
                 <span>⭐ {rating} / 10</span>
                 <span> 👁 {views.toLocaleString()}</span>
             </div>
+
+            {showActions && (
+                <div className="pt-3 border-t border-white/10">
+                    {status === "draft" && (
+                        <button
+                            onClick={(e) => {
+                            e.preventDefault();
+                            onSubmit(id);
+                            }}
+                            className="text-sm text-ivory bg-black/40 px-3 py-1 rounded-md hover:bg-black/60"
+                        >
+                            Submit for review
+                        </button>
+                    )}
+
+                    {status === "rejected" && (
+                        <button
+                            onClick={(e) => {
+                            e.preventDefault();
+                            onResubmit(id);
+                            }}
+                            className="text-sm text-ivory bg-black/40 px-3 py-1 rounded hover:bg-black/60"
+                        >
+                            Resubmit
+                        </button>
+                    )}
+            </div>
+        )}
         </div>
         </Link>
     );

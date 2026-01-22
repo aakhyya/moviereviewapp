@@ -21,7 +21,22 @@ function Navbar(){
           <button onClick={handleLogout} className="text-sm opacity-80 hover:opacity-100 transition">
             Logout
           </button>
-        </div>)}
+          {role === "critic" && (
+            <Link to="/critic/reviews" className="text-sm hover:underline">
+              My Reviews
+            </Link>
+          )}
+          {role === "editor" && (
+            <Link to="/editor" className="hover:underline">
+              Editor
+            </Link>
+          )}
+          {role === "editor" && (
+            <Link to="/editor/audit" className="hover:underline">
+              Audit
+            </Link>
+          )}
+          </div>)}
       </div>
     </nav>
     );

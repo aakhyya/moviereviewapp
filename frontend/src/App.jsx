@@ -5,11 +5,11 @@ import ReviewDetail from "./pages/ReviewDetail";
 import Login from "./pages/Login";
 import PublicRoute from "./components/PublicRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
-import EditorDashboard from "./components/EditorDashboard";
-import CriticDashboard from "./components/CriticDashboard";
+import CriticReviews from "./pages/CriticReviews";
+import EditorDashboard from "./pages/EditorDashboard";
+import AuditLog from "./pages/AuditLog";
 
 function App() {
-  console.log(import.meta.env.VITE_API_BASE_URL);
   return (
     <div className="min-h-screen bg-ivory text-zinc-900">
       <Navbar/>
@@ -27,10 +27,15 @@ function App() {
             <ProtectedRoute roles={["editor"]}>
               <EditorDashboard/>
             </ProtectedRoute>
-          }/>
-          <Route path="/critic" element={
+          }/> 
+          <Route path="/critic/reviews" element={
             <ProtectedRoute roles={["critic"]}>
-              <CriticDashboard/>
+              <CriticReviews/>
+            </ProtectedRoute>
+          }/>
+          <Route path="/editor/audit" element={
+            <ProtectedRoute roles={["editor"]}>
+              <AuditLog/>
             </ProtectedRoute>
           }/>
         </Routes>
