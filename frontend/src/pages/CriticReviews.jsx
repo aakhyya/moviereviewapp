@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import ReviewCard from "../components/ReviewCard";
+import { useNavigate } from "react-router-dom";
 
 function CriticReviews(){
-    
-  console.log("CRITIC REVIEWS PAGE");
     const [reviews,setReviews]=useState([]);
     const [loading,setLoading]=useState(true);
+    const navigate=useNavigate();
 
     useEffect(()=>{
         async function fetchMyReviews() {
@@ -14,7 +14,7 @@ function CriticReviews(){
                     `${import.meta.env.VITE_API_BASE_URL}/review/mine`,
                     {
                         headers:{
-                            "authorization": `Bearer ${localStorage.getItem("token")}`,
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
                         },
                     }
                 );
@@ -33,95 +33,67 @@ function CriticReviews(){
         fetchMyReviews();
     },[]);
 
-    async function submitReview(id) {
-        await fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/review/${id}/submit`,
-            {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            }
-        );
-
-        setReviews((prev) =>
-            prev.map((r) => r._id === id ? { ...r, status: "in-review" } : r));
-    }
-
-    async function resubmitReview(id) {
-        try {
-            if (!confirm("Resubmit this review for editor approval?")) return;
-            const res = await fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/review/${id}/resubmit`,
-            {
-                method: "POST",
-                headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            }
-            );
-
-            if (!res.ok) throw new Error("Resubmission failed");
-
-            setReviews((prev) =>
-            prev.map((r) =>
-                r._id === id ? { ...r, status: "in-review" } : r
-            )
-            );
-        } catch (err) {
-            console.error(err);
-        }
-    }
-    
     if(loading){
         return <p className="text-zinc-500">Loading your reviews...</p>
     }
 
+    const inreview=reviews.filter(r=> r.status==="in-review");
+    const rejected=reviews.filter(r=> r.status==="rejected");
+    const published=reviews.filter(r=> r.status==="published");
+
     if(reviews.length===0){
         return <p className="text-zinc-500">You haven't written any reviews yet.</p>
     }
+    console.log(reviews);
 
-    return(
-        <div className="space-y-6">
-            <h1 className="text-2xl font-semibold font-serif">
-                My Reviews
-            </h1>   
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {reviews.map((review) => (
-                <div key={review._id} className="space-y-2">
-                    <ReviewCard
-                    id={review._id}
-                    title={review.movietitle}
-                    author="You"
-                    rating={review.rating}
-                    views={review.views}
-                    status={review.status}
-                    posterUrl="https://upload.wikimedia.org/wikipedia/commons/4/40/Jaws_movie_poster.jpg"
-                    showActions
-                    onSubmit={submitReview}
-                    onResubmit={resubmitReview}
-                    />
-                    
-                    {review.status === "rejected" && (
-                    <div className="text-sm bg-red-50 text-red-700 p-3 rounded">
-                        <p className="font-semibold">Rejected</p>
-                        <p className="italic">"{review.rejectedreason}"</p>
-                    </div>
-                    )}
+    return (
+        <div className="max-w-5xl mx-auto p-6 space-y-10">
+            <h1 className="text-2xl font-semibold">My Reviews</h1>
 
-                    {review.status === "rejected" && (
-                        <button
-                            onClick={() => resubmitReview(review._id)}
-                            className="mt-3 px-4 py-2 bg-velvet text-ivory rounded hover:opacity-90"
-                        >
-                            Resubmit
-                        </button>
-                    )}
-                </div>))}
-            </div>
+            {/* In Review */}
+            <Section title="In Review" reviews={inreview} />
+
+            {/* Rejected */}
+            <Section
+                title="Rejected"
+                reviews={rejected}
+                renderExtra={(review) => (
+                <>
+                    <p className="text-sm text-red-500 mt-2">
+                    Reason: {review.rejectedreason}
+                    </p>
+                    <button
+                    onClick={() => navigate(`/critic/review/edit/${review._id}`)}
+                    className="mt-2 text-sm underline">
+                        Edit & Resubmit
+                    </button>
+                </>
+                )}
+            />
+
+            {/* Published */}
+            <Section title="Published" reviews={published} />
         </div>
     );
 }
+
+function Section({ title, reviews, renderExtra }) {
+  if (reviews.length === 0) return null;
+
+  return (
+    <section>
+      <h2 className="text-xl font-medium mb-4">{title}</h2>
+      <div className="space-y-4">
+        {reviews.map((review) => (
+          <ReviewCard key={review._id} review={review}>
+            {renderExtra && renderExtra(review)} 
+            {/* if renderExtra exists, send extra details wrt that review */}
+          </ReviewCard>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 
 export default CriticReviews;

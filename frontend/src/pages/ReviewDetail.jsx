@@ -64,7 +64,7 @@ function ReviewDetail(){
                     </h1>
 
                     <p className="opacity-80 mt-1 font-serif">
-                        by {review.author.name}
+                        by {review.author?.name}
                     </p>
 
                     <div className="flex gap-6 text-sm text-zinc-300 mt-6">

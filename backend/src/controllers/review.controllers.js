@@ -31,6 +31,11 @@ async function submitReview(req,res) {
             error:"Access denied! Not your review!"
         });
     }
+    if (review.status !== "draft") {
+        return res.status(400).json({
+            error: "Only drafts can be submitted for review!"
+        });
+    }
 
     review.status="in-review";
     await review.save();
@@ -51,7 +56,9 @@ async function submitReview(req,res) {
 async function getMyReviews(req,res){
     const reviews=await Review.find({
         author:req.user.id
-    }).sort({createdAt:-1});
+    })
+    .populate("author", "name")
+    .sort({createdAt:-1});
 
     if (reviews.length === 0) {
         return res.json([]);
@@ -89,7 +96,9 @@ async function resubmitReview(req,res){
         });
     }
 
-    review.status="in-review";
+    review.status = "in-review";
+    review.rejectedreason = undefined;
+    review.rejectedby = undefined;
     await review.save();
     await Audit.create({
         actor:req.user.id,
@@ -103,6 +112,76 @@ async function resubmitReview(req,res){
     return res.json({
         message:"Review resubmitted for review."
     });
+}
+// 6. update review for resubmission
+async function updateReview(req,res) {
+    const { rating, content } = req.body;
+    if (!rating || !content) {
+        return res.status(400).json({
+            error: "Rating and content are required",
+        });
+    }
+
+    const review=await Review.findById(req.params.id);
+    if(!review){
+        return res.status(404).json({
+            error:"Review not found!"
+        });
+    }
+
+    if (review.author.toString() !== req.user.id) {
+        return res.status(403).json({
+            error: "Access denied! Not your review!",
+        });
+    }
+
+    if(review.status!=="rejected"){
+        return res.status(400).json({
+            error:"Only rejected reviews can be edited!"
+        });
+    }
+
+    review.rating = rating;
+    review.content = content;
+
+    await review.save();
+
+    await Audit.create({
+        actor: req.user.id,
+        action: "REVIEW_UPDATED",
+        entityType: "Review",
+        entityId: review._id,
+        metadata: {
+            status: "rejected",
+        },
+    });
+
+    return res.json({
+        message: "Review updated successfully",
+    });
+
+}
+//7. get review by id for edit
+async function getReviewForEdit(req,res) {
+    const review = await Review.findById(req.params.id);
+
+    if (!review) {
+        return res.status(404).json({ error: "Review not found" });
+    }
+
+    // Only author can edit
+    if (review.author.toString() !== req.user.id) {
+        return res.status(403).json({ error: "Access denied" });
+    }
+
+    // Only rejected reviews can be edited
+    if (review.status !== "rejected") {
+        return res.status(400).json({
+            error: "Only rejected reviews can be edited"
+        });
+    }
+
+    res.json(review);
 }
 
 //EDITOR 
@@ -120,7 +199,9 @@ async function approveReview(req,res){
             error:"Only reviews 'in-review' can be approved!"
         });
     }
-    review.status="published";
+    review.status = "published";
+    review.rejectedreason = undefined;
+    review.rejectedby = undefined;
     await review.save();
     await Audit.create({
         actor:req.user.id,
@@ -200,7 +281,7 @@ async function archiveReview(req,res){
 async function getInReviews(req,res){
     const reviews = await Review.find({ status: "in-review" })
                                 .populate("author", "name");
-    if (!reviews === 0) {
+    if (reviews.length === 0) {
             return res.json([]);
     }
     res.json(reviews);
@@ -234,4 +315,4 @@ async function getReviewbyId(req,res){
 
 module.exports={getPublishedReviews, getReviewbyId,
                 approveReview,archiveReview,rejectReview,getInReviews,
-                createReview,submitReview,getMyReviews,getRejectedreviews,resubmitReview};
+                createReview,submitReview,getMyReviews,getRejectedreviews,resubmitReview,updateReview,getReviewForEdit};

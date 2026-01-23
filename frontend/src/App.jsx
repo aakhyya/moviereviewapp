@@ -8,6 +8,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import CriticReviews from "./pages/CriticReviews";
 import EditorDashboard from "./pages/EditorDashboard";
 import AuditLog from "./pages/AuditLog";
+import CreateReview from "./pages/CreateReview";
+import EditReview from "./pages/EditReview";
 
 function App() {
   return (
@@ -23,21 +25,37 @@ function App() {
               <Login/>
             </PublicRoute>
           }/>
+
+          {/* editor */}
           <Route path="/editor" element={
             <ProtectedRoute roles={["editor"]}>
               <EditorDashboard/>
             </ProtectedRoute>
           }/> 
-          <Route path="/critic/reviews" element={
-            <ProtectedRoute roles={["critic"]}>
-              <CriticReviews/>
-            </ProtectedRoute>
-          }/>
           <Route path="/editor/audit" element={
             <ProtectedRoute roles={["editor"]}>
               <AuditLog/>
             </ProtectedRoute>
           }/>
+
+          {/* critic */}
+          <Route path="/critic/reviews" element={
+            <ProtectedRoute roles={["critic"]}>
+              <CriticReviews/>
+            </ProtectedRoute>
+          }/>
+          <Route path="/critic/review/new/:movieId" element={
+            <ProtectedRoute roles={["critic"]}>
+              <CreateReview/>
+            </ProtectedRoute>
+          }
+          />
+          <Route path="/critic/review/edit/:id" element={
+            <ProtectedRoute roles={["critic"]}>
+              <EditReview/>
+            </ProtectedRoute>
+          }
+          />
         </Routes>
       </main>
     </div>
