@@ -2,28 +2,31 @@ const Review=require("../models/review");
 
 //Only computes, doesn't change data or store result
 async function avgRatingPerMovie(req,res){
-    const movietitle= req.params.movietitle.toLowerCase();
-
+    const { movieId } = req.params;
+    
+    if (!mongoose.Types.ObjectId.isValid(movieId)) {
+        return res.status(400).json({ error: "Invalid movie ID" });
+    }
 
     //aggregate processes data in stages, returns an array
     const stats= await Review.aggregate([
         {
             //WHERE movietitle = ? AND status = 'published'
             $match:{
-                movietitle,
-                status:"published"
+                movie: new mongoose.Types.ObjectId(movieId),
+                status: "published",
             }
         },
         {
             $group:{
-                _id:"$movietitle",  //group reviews by movie title
+                _id:"$movie",  //group reviews by movie title
                 avgRating:{ $avg: "$rating" }, //takes avg of ratings in a group
                 totalReviews:{ $sum: 1} //$sum: 1 = “add 1 per document”
             }
         }
     ]);
 
-    res.json(stats[0] || {}); //If no published reviews.
+    res.json(stats[0] || {avgRating: 0, totalReviews: 0}); //If no published reviews.
 }
 
 //Critic Stats: How many in-draft, published or rejected?
@@ -36,7 +39,7 @@ async function getCriticStats(req,res){
         },
         {
             $group:{
-                _id:"status",
+                _id:"$status",
                 count:{$sum:1}
             }
         }

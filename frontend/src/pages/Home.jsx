@@ -46,13 +46,7 @@ function Home(){
             (reviews.map((review) => (
                 <ReviewCard
                 key={review._id}
-                id={review._id}
-                title={review.movietitle}
-                author={review.author.name}
-                rating={review.rating}
-                views={review.views}
-                status={review.status}
-                posterUrl="https://upload.wikimedia.org/wikipedia/commons/4/40/Jaws_movie_poster.jpg"
+                review={review}
                 />))
             )
             }
@@ -62,6 +56,8 @@ function Home(){
 }
 
 export default Home;
+
+
 
 // Mobile: 1 column
 // Tablet: 2 columns

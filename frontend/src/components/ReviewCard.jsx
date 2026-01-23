@@ -6,22 +6,23 @@ function ReviewCard({ review, children }) {
 
   const {
     _id,
-    movietitle,
+    movie,
     author,
     rating,
     views = 0,
     status,
-    posterUrl,
   } = review;
+
+  if (!movie) return null; 
 
   return (
       <div className="bg-velvet/90 text-ivory rounded-xl p-5 space-y-3 hover:-translate-y-1 transition">
         <Link to={`/review/${_id}`} className="block">
         <div className="w-full rounded-md bg-zinc-800 overflow-hidden aspect-[2/3] flex items-center justify-center text-zinc-500 text-sm">
-          {posterUrl ? (
+          {movie.posterUrl ? (
             <img
-              src={posterUrl}
-              alt={movietitle}
+              src={movie.posterUrl}
+              alt={movie.title}
               loading="lazy"
               className="h-full w-full object-cover"
             />
@@ -35,7 +36,7 @@ function ReviewCard({ review, children }) {
           <div className="font-serif min-h-[76px]">
             <Link to={`/review/${_id}`} className="block">
             <h3 className="text-base sm:text-lg font-semibold line-clamp-2">
-              {movietitle}
+              {movie.title}
             </h3>
             </Link>
             <p className="text-sm text-zinc-400">

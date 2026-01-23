@@ -1,26 +1,33 @@
 const Review=require("../models/review");
 const Audit=require("../models/auditlog");
+const Movie = require("../models/movie");
+
 //CRITIC
 //1. draft
 async function createReview(req,res) {
-    const {movietitle,content,rating}=req.body;
-    if(!movietitle || !content || !rating){
-        return res.status(400).json({
-            error:"All fields required!",
-        });
+    const { content, rating } = req.body;
+    const { movieId } = req.params;
+    const movie = await Movie.findById(movieId);
+    if (!movie) {
+        return res.status(404).json({ error: "Movie not found" });
     }
 
-    const review=await Review.create({
-        movietitle,
+    if (!movieId || !content || !rating) {
+        return res.status(400).json({ error: "All fields required" });
+    }
+
+    const review = await Review.create({
+        movie: movieId,
         content,
         rating,
-        author:req.user.id
+        author: req.user.id,
     });
-    return res.status(201).json(review);
+
+    res.status(201).json(review);
 }
 //2. submit for review
 async function submitReview(req,res) {
-    const review=await Review.findById(req.params.id);
+    const review=await Review.findById(req.params.id).populate("movie");
     if(!review){
         return res.status(404).json({
             error:"Review not found!"
@@ -58,6 +65,7 @@ async function getMyReviews(req,res){
         author:req.user.id
     })
     .populate("author", "name")
+    .populate("movie")
     .sort({createdAt:-1});
 
     if (reviews.length === 0) {
@@ -71,7 +79,9 @@ async function getMyReviews(req,res){
         const reviews=await Review.find({
             author:req.user.id,
             status:"rejected"
-        }).populate("rejectedby","name");
+        })
+        .populate("rejectedby","name")
+        .populate("movie");;
         if (reviews.length === 0) {
             return res.json([]);
         }
@@ -163,7 +173,7 @@ async function updateReview(req,res) {
 }
 //7. get review by id for edit
 async function getReviewForEdit(req,res) {
-    const review = await Review.findById(req.params.id);
+    const review = await Review.findById(req.params.id).populate("movie");;
 
     if (!review) {
         return res.status(404).json({ error: "Review not found" });
@@ -261,6 +271,11 @@ async function archiveReview(req,res){
             error:"Review not found!"
         });
     }
+    if (review.status !== "published") {
+        return res.status(400).json({
+            error: "Only published reviews can be archived",
+        });
+    }
 
     review.status="archived";
     await review.save();
@@ -280,7 +295,8 @@ async function archiveReview(req,res){
 //4. get in-review reviews
 async function getInReviews(req,res){
     const reviews = await Review.find({ status: "in-review" })
-                                .populate("author", "name");
+                                .populate("author", "name")
+                                .populate("movie");;
     if (reviews.length === 0) {
             return res.json([]);
     }
@@ -291,7 +307,8 @@ async function getInReviews(req,res){
 //1. read published drafts
 async function getPublishedReviews(req,res){
     const reviews=await Review.find({status:"published"})
-                            .populate("author","name");
+                            .populate("author","name")
+                            .populate("movie");;
     return res.json(reviews);   
 }
 
@@ -301,7 +318,9 @@ async function getReviewbyId(req,res){
     const review=await Review.findOne({
         _id:req.params.id,
         status:"published"
-    }).populate("author","name");
+    })
+    .populate("author","name")
+    .populate("movie");
     if(!review){
         return res.status(404).json({
             error:"Review not found!"

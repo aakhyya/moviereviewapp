@@ -54,13 +54,13 @@ function ReviewDetail(){
             <div className="relative h-[280px] md:h-[340px] rounded-xl overflow-hidden">
                 <img
                 src="https://upload.wikimedia.org/wikipedia/commons/4/40/Jaws_movie_poster.jpg"
-                alt={review.movietitle}
+                alt={review.movie.title}
                 className="absolute inset-0 w-full h-full  bg-velvet opacity-90 object-cover blur-sm scale-100 "
                 />
 
                 <div className="relative h-full p-8 flex flex-col justify-end bg-gradient-to-t from-zinc-950/90 via-zinc-950/60 to-transparent text-ivory">
                     <h1 className="text-3xl md:text-4xl font-bold leading-tight font-serif">
-                        {review.movietitle}
+                        {review.movie.title}
                     </h1>
 
                     <p className="opacity-80 mt-1 font-serif">

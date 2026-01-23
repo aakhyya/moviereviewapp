@@ -97,12 +97,7 @@ function EditorDashboard(){
                 <div key={review._id} className="space-y-3">
                     <ReviewCard
                     id={review._id}
-                    title={review.movietitle}
-                    author={review.author.name}
-                    rating={review.rating}
-                    views={review.views}
-                    status={review.status}
-                    posterUrl="https://upload.wikimedia.org/wikipedia/commons/4/40/Jaws_movie_poster.jpg"
+                    review={review}
                     />
 
                     <div className="flex gap-3">

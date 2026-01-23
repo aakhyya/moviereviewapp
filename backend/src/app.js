@@ -10,6 +10,7 @@ const testroute=require("./routes/test.routes");
 const reviewroute=require("./routes/review.routes");
 const analyticsroute=require("./routes/analytics.routes");
 const auditroute=require("./routes/audit.routes");
+const movieroute=require("./routes/movie.routes");
 
 app.use("/api",healthroute);
 app.use("/api/auth",authroute);
@@ -17,6 +18,8 @@ app.use("/api/test",testroute);
 app.use("/api/review",reviewroute);
 app.use("/api/analytics",analyticsroute);
 app.use("/api/audit",auditroute);
+app.use("/api/movie",movieroute);
+
 module.exports=app;
 
 //1. test test@gm.com 123 : viewer

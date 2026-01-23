@@ -10,7 +10,7 @@ const requireAuth=require("../middlewares/requireAuth");
 const requireRole=require("../middlewares/requireRole");
 
 //public
-router.get("/movie/:movietitle",avgRatingPerMovie);
+router.get("/movie/:movieId",avgRatingPerMovie);
 
 //critic
 router.get("/critic/me", requireAuth, requireRole("critic"), getCriticStats);

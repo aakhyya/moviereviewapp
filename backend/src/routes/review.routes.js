@@ -23,7 +23,7 @@ const {
 router.get("/mine",requireAuth,requireRole("critic"),getMyReviews);
 router.get("/rejected", requireAuth,requireRole("critic"),getRejectedreviews);
 router.get("/:id/edit",requireAuth,requireRole("critic"),getReviewForEdit);
-router.post("/", requireAuth,requireRole("critic"),createReview);
+router.post("/movie/:movieId", requireAuth,requireRole("critic"),createReview);
 router.post("/:id/submit", requireAuth,requireRole("critic"),submitReview);
 router.post("/:id/resubmit", requireAuth,requireRole("critic"),resubmitReview);
 router.put("/:id", requireAuth, requireRole("critic"), updateReview);

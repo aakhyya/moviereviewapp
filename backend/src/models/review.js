@@ -1,12 +1,6 @@
 const mongoose=require("mongoose");
 
 const reviewSchema=mongoose.Schema({
-    movietitle:{
-        type:String,
-        required:true,
-        trim:true,
-        lowercase:true //to disable case-sensitive
-    },
     content:{
         type:String,
         required:true
@@ -16,6 +10,11 @@ const reviewSchema=mongoose.Schema({
         min:1,
         max:10,
         required:true
+    },
+    movie: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Movie",
+      required: true,
     },
     author:{
         type:mongoose.Schema.Types.ObjectId,
