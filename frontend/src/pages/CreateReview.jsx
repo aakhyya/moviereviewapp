@@ -2,29 +2,29 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 function CreateReview() {
-  const { slug } = useParams();
+  const { movieId } = useParams();
   const navigate = useNavigate();
 
   const [movie, setMovie] = useState(null);
+  const [reviewId, setReviewId] = useState(null); // 👈 important
   const [rating, setRating] = useState("");
+  const [posterUrl, setPosterUrl] = useState("");
   const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("draft");
+
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [autosaveStatus, setAutosaveStatus] = useState("idle");
   const [error, setError] = useState("");
 
-  // 1️⃣ Fetch movie by slug
+  // 🔹 Fetch movie
   useEffect(() => {
     async function fetchMovie() {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/movie/slug/${slug}`
+          `${import.meta.env.VITE_API_BASE_URL}/movie/${movieId}`
         );
         const data = await res.json();
-
-        if (!res.ok) {
-          setError(data?.error || "Movie not found");
-          return;
-        }
-
         setMovie(data);
       } catch {
         setError("Failed to load movie");
@@ -32,43 +32,83 @@ function CreateReview() {
     }
 
     fetchMovie();
-  }, [slug]);
+  }, [movieId]);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError("");
+  // 🔹 Fetch existing draft (if any)
+  useEffect(() => {
+    async function fetchDraft() {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/review/draft/${movieId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
-    if (!rating || !content) {
-      setError("All fields are required");
-      return;
+        if (!res.ok) return;
+
+        const draft = await res.json();
+
+        setReviewId(draft._id);
+        setRating(draft.rating || "");
+        setContent(draft.content || "");
+        setPosterUrl(draft.posterUrl || "");
+        setStatus(draft.status);
+      }
+       catch(err) {
+        console.log("Something went wrong",err);
+       }
+      finally {
+        setLoading(false);
+      }
     }
 
-    try {
-      setLoading(true);
+    fetchDraft();
+  }, [movieId]);
 
-      // 2️⃣ Create draft review using movie._id
-      const createRes = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/review/${movie._id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ rating, content }),
-        }
-      );
+  // 🔑 AUTOSAVE (draft only)
+  useEffect(() => {
+    if (!reviewId) return;
+    if (status !== "draft") return;
+    if (!content && !rating) return;
 
-      const createdReview = await createRes.json();
+    setAutosaveStatus("saving");
 
-      if (!createRes.ok) {
-        setError(createdReview?.error || "Failed to create review");
-        return;
+    const timeout = setTimeout(async () => {
+      try {
+        await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/review/${reviewId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ rating, content, posterUrl }),
+          }
+        );
+
+        setAutosaveStatus("saved");
+        setTimeout(() => setAutosaveStatus("idle"), 2000);
+      } catch {
+        setAutosaveStatus("error");
       }
+    }, 1200);
 
-      // 3️⃣ Submit for review
+    return () => clearTimeout(timeout);
+  }, [rating, content, posterUrl, reviewId, status]);
+
+  // 🔹 Submit for review
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      setSubmitting(true);
+
       await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/review/${createdReview._id}/submit`,
+        `${import.meta.env.VITE_API_BASE_URL}/review/${reviewId}/submit`,
         {
           method: "POST",
           headers: {
@@ -79,27 +119,30 @@ function CreateReview() {
 
       navigate("/critic/reviews");
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Submission failed");
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   }
 
-  if(loading){
-    return <p className="text-center text-zinc-500">Loading movie…</p>;
-  }
-
-  if (!movie) {
-    return <p className="text-center text-zinc-500">No movie found</p>;
+  if (loading || !movie) {
+    return <p className="text-center text-zinc-500">Loading…</p>;
   }
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-semibold mb-4">
+    <div className="max-w-xl mx-auto p-6 space-y-4">
+      <h1 className="text-2xl font-semibold">
         Write a Review for {movie.title}
       </h1>
 
-      {error && <p className="mb-3 text-red-500 text-sm">{error}</p>}
+      {/* Autosave indicator */}
+      <p className="text-xs text-zinc-500">
+        {autosaveStatus === "saving" && "Saving draft…"}
+        {autosaveStatus === "saved" && "Draft saved"}
+        {autosaveStatus === "error" && "Autosave failed"}
+      </p>
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -112,6 +155,14 @@ function CreateReview() {
           placeholder="Rating (1–10)"
         />
 
+        <input
+          type="url"
+          value={posterUrl}
+          onChange={(e) => setPosterUrl(e.target.value)}
+          placeholder="Poster URL (optional)"
+          className="w-full border rounded px-3 py-2"
+        />
+
         <textarea
           rows="6"
           value={content}
@@ -121,10 +172,10 @@ function CreateReview() {
         />
 
         <button
-          disabled={loading}
-          className="w-full bg-black text-white py-2 rounded disabled:opacity-50"
+          disabled={submitting}
+          className="w-full bg-black text-white py-2 rounded"
         >
-          {loading ? "Submitting…" : "Submit for Review"}
+          Submit for Review
         </button>
       </form>
     </div>

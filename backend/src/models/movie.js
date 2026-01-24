@@ -19,18 +19,7 @@ const movieSchema=new mongoose.Schema(
         description: {
             type: String,
             trim: true,
-        },
-        //for searching on basis of movie, but actually fetching through id:hybrid approach
-        slug: {
-            type: String,
-            unique: true,
-            index: true,
-        },
-        //editor who added movie
-        createdBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        },
+        }
     },
     {
         timestamps:true

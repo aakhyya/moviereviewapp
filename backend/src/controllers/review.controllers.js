@@ -5,7 +5,7 @@ const Movie = require("../models/movie");
 //CRITIC
 //1. draft
 async function createReview(req,res) {
-    const { content, rating } = req.body;
+    const { content, rating , posterUrl } = req.body;
     const { movieId } = req.params;
     const movie = await Movie.findById(movieId);
     if (!movie) {
@@ -20,7 +20,9 @@ async function createReview(req,res) {
         movie: movieId,
         content,
         rating,
+        posterUrl,
         author: req.user.id,
+        status: "draft",
     });
 
     res.status(201).json(review);
@@ -193,6 +195,26 @@ async function getReviewForEdit(req,res) {
 
     res.json(review);
 }
+//8. GET existing draft for movie (or create one)
+async function getExistingDrafts(req,res){
+    const { movieId } = req.params;
+
+    let draft = await Review.findOne({
+        movie: movieId,
+        author: req.user.id,
+        status: "draft"
+    });
+
+    if (!draft) {
+        draft = await Review.create({
+            movie: movieId,
+            author: req.user.id,
+            status: "draft"
+        });
+    }
+
+    res.json(draft);
+}
 
 //EDITOR 
 //1. approve review
@@ -302,6 +324,18 @@ async function getInReviews(req,res){
     }
     res.json(reviews);
 }
+//5. get review by id (because general one opens only published):
+async function getReviewForEditor(req,res) {
+    const review = await Review.findById(req.params.id)
+                                .populate("author", "name")
+                                .populate("movie");
+
+    if (!review) {
+        return res.status(404).json({ error: "Review not found" });
+    }
+
+    res.json(review);
+}
 
 //VIEWERS
 //1. read published drafts
@@ -333,5 +367,5 @@ async function getReviewbyId(req,res){
 }
 
 module.exports={getPublishedReviews, getReviewbyId,
-                approveReview,archiveReview,rejectReview,getInReviews,
-                createReview,submitReview,getMyReviews,getRejectedreviews,resubmitReview,updateReview,getReviewForEdit};
+                approveReview,archiveReview,rejectReview,getInReviews,getReviewForEditor,
+                createReview,submitReview,getMyReviews,getRejectedreviews,resubmitReview,updateReview,getReviewForEdit,getExistingDrafts};

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import StatusBadge from "./StatusBadge";
 
 function ReviewCard({ review, children }) {
-  if (!review) return null; // 🛑 guard
+  if (!review) return null;
 
   const {
     _id,
@@ -15,19 +15,24 @@ function ReviewCard({ review, children }) {
 
   if (!movie) return null; 
 
+  const poster = review.posterUrl || review.movie.posterUrl;
+
+
   return (
       <div className="bg-velvet/90 text-ivory rounded-xl p-5 space-y-3 hover:-translate-y-1 transition">
         <Link to={`/review/${_id}`} className="block">
         <div className="w-full rounded-md bg-zinc-800 overflow-hidden aspect-[2/3] flex items-center justify-center text-zinc-500 text-sm">
-          {movie.posterUrl ? (
+          {poster ? (
             <img
-              src={movie.posterUrl}
+              src={poster}
               alt={movie.title}
-              loading="lazy"
               className="h-full w-full object-cover"
+              loading="lazy"
             />
           ) : (
-            "No poster yet"
+            <div className="flex items-center justify-center h-full text-zinc-500 text-sm">
+              No poster yet
+            </div>
           )}
         </div>
         </Link>

@@ -7,9 +7,12 @@ const requireRole = require("../middlewares/requireRole");
 const {
   createMovie,
   getAllMovies,
-  getMovieById,
-  getMovieBySlug
+  getMovieById
 } = require("../controllers/movie.controllers");
+
+const {
+  avgRatingPerMovie
+}=require("../controllers/analytics.controllers")
 
 // editor only
 router.post("/", requireAuth, requireRole("editor"), createMovie);
@@ -17,6 +20,6 @@ router.post("/", requireAuth, requireRole("editor"), createMovie);
 // anyone
 router.get("/", getAllMovies);
 router.get("/:id", getMovieById);
-router.get("/slug/:slug", getMovieBySlug);
+router.get("/:movieId/stats", avgRatingPerMovie);
 
 module.exports = router;

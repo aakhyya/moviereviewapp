@@ -11,6 +11,7 @@ import AuditLog from "./pages/AuditLog";
 import CreateReview from "./pages/CreateReview";
 import EditReview from "./pages/EditReview";
 import Movies from "./pages/Movies";
+import EditorReviewDetail from "./pages/EditorReviewDetail";
 
 function App() {
   return (
@@ -26,8 +27,15 @@ function App() {
               <Login/>
             </PublicRoute>
           }/>
+
+           {/* movies */}
           <Route path="/movies" element={<Movies />} />
-          <Route path="/movies/:slug" element={<Movies/>} />
+          <Route path="/movies/:movieId/review" element={
+              <ProtectedRoute roles={["critic"]}>
+                <CreateReview />
+              </ProtectedRoute>
+            }
+          />
 
           {/* editor */}
           <Route path="/editor" element={
@@ -40,6 +48,14 @@ function App() {
               <AuditLog/>
             </ProtectedRoute>
           }/>
+          <Route
+            path="/editor/review/:id"
+            element={
+              <ProtectedRoute roles={["editor"]}>
+                <EditorReviewDetail/>
+              </ProtectedRoute>
+            }
+          />
 
           {/* critic */}
           <Route path="/critic/reviews" element={
@@ -47,12 +63,6 @@ function App() {
               <CriticReviews/>
             </ProtectedRoute>
           }/>
-          <Route path="/movies/:slug/review" element={
-            <ProtectedRoute roles={["critic"]}>
-              <CreateReview/>
-            </ProtectedRoute>
-          }
-          />
           <Route path="/critic/review/edit/:id" element={
             <ProtectedRoute roles={["critic"]}>
               <EditReview/>

@@ -1,5 +1,4 @@
 const Movie = require("../models/movie");
-const slugify=require("slugify");
 
 // EDITOR: 
 //1. add movie
@@ -17,20 +16,12 @@ async function createMovie(req, res) {
     return res.status(400).json({ error: "Movie already exists" });
   }
 
-    const slug = slugify(
-        `${title}-${releaseYear}`,
-        {
-            lower: true,
-            strict: true,
-        }
-    );
 
   const movie = await Movie.create({
     title,
     releaseYear,
     posterUrl,
     description,
-    slug,
     createdBy: req.user.id,
   });
 
@@ -51,18 +42,9 @@ async function getMovieById(req, res) {
   }
   res.json(movie);
 }
-//3. get movie by slug(movietitle)
-async function getMovieBySlug(req,res){
-    const movie = await Movie.findOne({ slug: req.params.slug });
-    if (!movie) {
-        return res.status(404).json({ error: "Movie not found" });
-    }
-    res.json(movie);
-}
 
 module.exports = {
   createMovie,
   getAllMovies,
-  getMovieById,
-  getMovieBySlug
+  getMovieById
 };

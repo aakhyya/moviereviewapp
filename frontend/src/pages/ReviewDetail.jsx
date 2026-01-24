@@ -3,48 +3,53 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
-function ReviewDetail(){
-    const {id}=useParams();
-    const [review, setReview]=useState(null);
-    const [loading,setLoading]=useState(true);
-    const navigate=useNavigate();
+function ReviewDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { role } = useAuth();
 
-    const {role}=useAuth();
+  const [review, setReview] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(()=>{
-        async function fetchReview() {
-            try{
-                const res=await fetch(`${import.meta.env.VITE_API_BASE_URL}/review/${id}`);
-                const data=await res.json();
-                setReview(data);
-            }
-            catch(err){
-                console.log(`Couldn't fetch review: ${err}`);
-            }
-            finally{
-                setLoading(false);
-            }
-        }
+  useEffect(() => {
+    async function fetchReview() {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/review/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
-        fetchReview();
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error);
 
-    },[id]);
-
-    if(loading){
-        return(
-            <p className="text-zinc-400">Loading Review...</p>
-        )
+        setReview(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    if(!review){
-        return(
-            <p className="text-zinc-400">Review not found</p>
-        )
-    }
+    fetchReview();
+  }, [id]);
 
-    return(
-       <div className="max-w-3xl mx-auto space-y-6">
-            <button
+  if (loading) {
+    return <p className="text-zinc-400">Loading Review...</p>;
+  }
+
+  if (!review || !review.movie) {
+    return <p className="text-zinc-400">Review not found</p>;
+  }
+
+  const poster = review.posterUrl || review.movie.posterUrl;
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <button
                 onClick={() => navigate(-1)}
                 className="text-sm text-zinc-400 hover:text-velvet transition"
             >
@@ -52,11 +57,17 @@ function ReviewDetail(){
             </button>
 
             <div className="relative h-[280px] md:h-[340px] rounded-xl overflow-hidden">
-                <img
-                src="https://upload.wikimedia.org/wikipedia/commons/4/40/Jaws_movie_poster.jpg"
-                alt={review.movie.title}
-                className="absolute inset-0 w-full h-full  bg-velvet opacity-90 object-cover blur-sm scale-100 "
-                />
+                {poster ? (
+                    <img
+                    src={poster}
+                    alt={review.movie.title}
+                    className="absolute inset-0 w-full h-full object-cover blur-sm scale-110"
+                    />
+                ) : (
+                    <div className="flex items-center justify-center h-full text-zinc-500 text-sm">
+                    No poster yet
+                    </div>
+                )}
 
                 <div className="relative h-full p-8 flex flex-col justify-end bg-gradient-to-t from-zinc-950/90 via-zinc-950/60 to-transparent text-ivory">
                     <h1 className="text-3xl md:text-4xl font-bold leading-tight font-serif">
@@ -109,8 +120,9 @@ function ReviewDetail(){
                 </>
             )}
             </div>
-        </div>
-    );
+    </div>
+  );
 }
+
 
 export default ReviewDetail;

@@ -37,6 +37,10 @@ const reviewSchema=mongoose.Schema({
     views:{
         type:Number,
         default:0
+    },
+    posterUrl: {
+        type: String,
+        trim:true
     }
 },{
     timestamps:true,
