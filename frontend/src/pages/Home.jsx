@@ -24,22 +24,16 @@ function Home(){
     }, []);
 
     return(
-        
-        <div className="bg-ivory p-10 shadow-lg rounded-xl">
-        <div className="grid 
-                        grid-cols-1
-                        sm:grid-cols-2
-                        md:grid-cols-3
-                        lg:grid-cols-4
-                        gap-6">
+        <div className="relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
             {loading ? 
             (
-                <p className="text-zinc-400 text-center col-span-full">
+                <p className="col-span-full text-center text-textMuted text-sm">
                     Loading Reviews...
                 </p>
             ) : reviews.length===0 ? 
             (
-                <p className="text-zinc-400 text-center col-span-full">
+                <p className="col-span-full text-center text-textMuted text-sm">
                     No reviews published yet🎬
                 </p>
             ) :
@@ -47,7 +41,7 @@ function Home(){
                 <ReviewCard
                 key={review._id}
                 review={review}
-                />))
+                />)) 
             )
             }
         </div>

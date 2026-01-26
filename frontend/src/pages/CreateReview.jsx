@@ -130,7 +130,7 @@ function CreateReview() {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-4">
+    <div className="max-w-xl mx-auto p-6 space-y-4 text-black">
       <h1 className="text-2xl font-semibold">
         Write a Review for {movie.title}
       </h1>

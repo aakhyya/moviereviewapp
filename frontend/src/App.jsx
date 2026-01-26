@@ -15,10 +15,14 @@ import EditorReviewDetail from "./pages/EditorReviewDetail";
 
 function App() {
   return (
-    <div className="min-h-screen bg-ivory text-zinc-900">
+    <div className="min-h-screen text-textPrimary"
+    style={{
+    background:
+      "linear-gradient(to top, oklch(26.2% 0.051 172.552) , oklch(21% 0.006 285.885)"
+    }}>
       <Navbar/>
       
-      <main className="max-w-5xl mx-auto p-6">
+      <main className="max-w-6xl mx-auto px-6 py-10 bg-transparent">
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/review/:id" element={<ReviewDetail/>}/>

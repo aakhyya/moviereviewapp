@@ -10,9 +10,9 @@ function Navbar(){
       window.location.reload();
     }
     return(
-    <nav className="sticky top-0 z-50 bg-velvet text-ivory border-b border-black/10">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between">
-        <h1 className="text-2xl font-serif font-semibold tracking-wide">
+    <nav className="bg-black/25 backdrop-blur-xl  text-red-100">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <h1 className="text-2xl font-serif font-bold">
           Screened
         </h1>
         {!isAuthenticated ? (<Link to="/login">Login</Link>) :

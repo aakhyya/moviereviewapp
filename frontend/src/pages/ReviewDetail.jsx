@@ -88,7 +88,7 @@ function ReviewDetail() {
 
             <div className="bg-ivory p-10 shadow-lg rounded-xl">
                 <div className="border-t border-black/10 pt-6">
-                    <p className="text-velvet leading-snug whitespace-pre-line font-mono">
+                    <p className="text-velvet leading-snug whitespace-pre-line font-serif">
                     {review.content}
                     </p>
                 </div>
