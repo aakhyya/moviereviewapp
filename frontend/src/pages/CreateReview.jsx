@@ -130,55 +130,138 @@ function CreateReview() {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-4 text-black">
-      <h1 className="text-2xl font-semibold">
-        Write a Review for {movie.title}
+  <div className="max-w-3xl mx-auto px-6 py-12 space-y-8">
+    {/* Header */}
+    <div className="space-y-2 text-center">
+      <h1 className="text-2xl font-serif tracking-wide text-zinc-100">
+        {movie.title}
       </h1>
+    </div>
 
-      {/* Autosave indicator */}
-      <p className="text-xs text-zinc-500">
-        {autosaveStatus === "saving" && "Saving draft…"}
-        {autosaveStatus === "saved" && "Draft saved"}
-        {autosaveStatus === "error" && "Autosave failed"}
+    {/* Autosave */}
+    <p className="text-xs text-zinc-400 tracking-wide">
+      {autosaveStatus === "saving" && "Saving draft…"}
+      {autosaveStatus === "saved" && "Draft saved"}
+      {autosaveStatus === "error" && "Autosave failed"}
+    </p>
+
+    {error && (
+      <p className="text-xs tracking-wide text-zinc-300">
+        {error}
       </p>
+    )}
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+    {/* Glass Form */}
+    <form
+      onSubmit={handleSubmit}
+      className="
+        relative
+        rounded-2xl
+        p-10
+        space-y-6
+        backdrop-blur-xl
+        bg-gradient-to-br
+        from-white/10 via-white/5 to-white/10
+        border border-white/20
+        shadow-[0_20px_60px_rgba(0,0,0,0.6)]
+      "
+    >
+      {/* Rating */}
+      <div className="space-y-1">
+        <label className="text-xs tracking-widest text-zinc-400 uppercase">
+          Rating
+        </label>
         <input
           type="number"
           min="1"
           max="10"
           value={rating}
           onChange={(e) => setRating(e.target.value)}
-          className="w-full border rounded px-3 py-2"
-          placeholder="Rating (1–10)"
+          placeholder="1 – 10"
+          className="
+            w-full
+            bg-black/40
+            border border-white/20
+            rounded-lg
+            px-4 py-2
+            text-zinc-100
+            placeholder-zinc-500
+            focus:outline-none
+            focus:border-white/40
+          "
         />
+      </div>
 
+      {/* Poster URL */}
+      <div className="space-y-1">
+        <label className="text-xs tracking-widest text-zinc-400 uppercase">
+          Poster URL (optional)
+        </label>
         <input
           type="url"
           value={posterUrl}
           onChange={(e) => setPosterUrl(e.target.value)}
-          placeholder="Poster URL (optional)"
-          className="w-full border rounded px-3 py-2"
+          placeholder="https://…"
+          className="
+            w-full
+            bg-black/40
+            border border-white/20
+            rounded-lg
+            px-4 py-2
+            text-zinc-100
+            placeholder-zinc-500
+            focus:outline-none
+            focus:border-white/40
+          "
         />
+      </div>
 
+      {/* Content */}
+      <div className="space-y-1">
+        <label className="text-xs tracking-widest text-zinc-400 uppercase">
+          Review
+        </label>
         <textarea
-          rows="6"
+          rows="8"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full border rounded px-3 py-2"
-          placeholder="Write your review…"
+          placeholder="Write your thoughts…"
+          className="
+            w-full
+            bg-black/40
+            border border-white/20
+            rounded-lg
+            px-4 py-3
+            text-zinc-100
+            placeholder-zinc-500
+            focus:outline-none
+            focus:border-white/40
+            resize-none
+          "
         />
+      </div>
 
-        <button
-          disabled={submitting}
-          className="w-full bg-black text-white py-2 rounded"
-        >
-          Submit for Review
-        </button>
-      </form>
-    </div>
+      {/* Submit */}
+      <button
+        disabled={submitting}
+        className="
+          w-full
+          mt-4
+          py-3
+          rounded-full
+          border border-white/30
+          text-zinc-100
+          tracking-widest
+          uppercase
+          hover:bg-white/10
+          transition
+          disabled:opacity-50
+        "
+      >
+        Submit for Review
+      </button>
+    </form>
+  </div>
   );
 }
 

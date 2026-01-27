@@ -18,7 +18,7 @@ function App() {
     <div className="min-h-screen text-textPrimary"
     style={{
     background:
-      "linear-gradient(to top, oklch(26.2% 0.051 172.552) , oklch(21% 0.006 285.885)"
+      "linear-gradient(to top, oklch(37% 0.013 285.805) , oklch(20.5% 0 0)"
     }}>
       <Navbar/>
       

@@ -80,44 +80,122 @@ function EditReview() {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-4">
-      <h1 className="text-2xl font-semibold">Edit Rejected Review</h1>
+  <div className="max-w-3xl mx-auto px-6 py-12 space-y-8">
+    {/* Header */}
+    <div className="space-y-2 text-center">
+      <h1 className="text-2xl font-serif tracking-wide text-zinc-100">
+        Edit Rejected Review
+      </h1>
+    </div>
 
-      <p className="text-sm text-red-500">
-        Only rejected reviews can be edited
+    {/* Info note */}
+    <p className="text-xs text-zinc-400 tracking-wide text-center">
+      Only rejected reviews can be edited
+    </p>
+
+    {error && (
+      <p className="text-xs tracking-wide text-zinc-300 text-center">
+        {error}
       </p>
+    )}
 
-      {rejectedreason && (
-        <div className="border border-red-400 bg-red-50 p-3 text-sm">
-          <strong>Editor feedback:</strong> {rejectedreason}
-        </div>
-      )}
-
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
-      <form onSubmit={handleResubmit} className="space-y-4">
+    {/* Glass Form */}
+    <form
+      onSubmit={handleResubmit}
+      className="
+        relative
+        rounded-2xl
+        p-10
+        space-y-6
+        backdrop-blur-xl
+        bg-gradient-to-br
+        from-white/10 via-white/5 to-white/10
+        border border-white/20
+        shadow-[0_20px_60px_rgba(0,0,0,0.6)]
+      "
+    >
+      {/* Rating */}
+      <div className="space-y-1">
+        <label className="text-xs tracking-widest text-zinc-400 uppercase">
+          Rating
+        </label>
         <input
           type="number"
           min="1"
           max="10"
           value={rating}
           onChange={(e) => setRating(e.target.value)}
-          className="w-full border rounded px-3 py-2"
+          className="
+            w-full
+            bg-black/40
+            border border-white/20
+            rounded-lg
+            px-4 py-2
+            text-zinc-100
+            placeholder-zinc-500
+            focus:outline-none
+            focus:border-white/40
+          "
         />
+      </div>
 
+      {/* Content */}
+      <div className="space-y-1">
+        <label className="text-xs tracking-widest text-zinc-400 uppercase">
+          Review
+        </label>
         <textarea
-          rows="6"
+          rows="8"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full border rounded px-3 py-2"
+          className="
+            w-full
+            bg-black/40
+            border border-white/20
+            rounded-lg
+            px-4 py-3
+            text-zinc-100
+            placeholder-zinc-500
+            focus:outline-none
+            focus:border-white/40
+            resize-none
+          "
         />
+      </div>
 
-        <button className="w-full bg-black text-white py-2 rounded">
-          Resubmit for Review
-        </button>
-      </form>
-    </div>
-  );
+      {/* Submit */}
+      <button
+        className="
+          w-full
+          mt-4
+          py-3
+          rounded-full
+          border border-white/30
+          text-zinc-100
+          tracking-widest
+          uppercase
+          hover:bg-white/10
+          transition
+        "
+      >
+        Resubmit for Review
+      </button>
+
+      {/* Rejection Reason – placed at bottom */}
+      {rejectedreason && (
+        <div className="pt-6 border-t border-white/10">
+          <p className="text-xs tracking-wide text-zinc-400 uppercase mb-1">
+            Editor Feedback
+          </p>
+          <p className="text-sm text-zinc-300 italic">
+            {rejectedreason}
+          </p>
+        </div>
+      )}
+    </form>
+  </div>
+);
+
 }
 
 export default EditReview;

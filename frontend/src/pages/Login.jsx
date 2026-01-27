@@ -42,40 +42,87 @@ function Login(){
     }
 
     return(
-         <div className="max-w-sm mx-auto mt-24">
-            <h1 className="text-2xl font-semibold mb-6">Login</h1>
-            
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-2 border rounded"
-                required
-                />
+         <div className="min-h-screen flex items-center justify-center px-4">
+        <div
+        className="
+            w-full max-w-md
+            rounded-2xl
+            p-12
+            backdrop-blur-xl
+            bg-gradient-to-br
+            from-white/10 via-white/5 to-white/10
+            border border-white/20
+            shadow-[0_20px_60px_rgba(0,0,0,0.6)]
+        "
+        >
+        <h1 className="text-2xl font-serif font-bold text-gray-200 tracking-wider text-center mb-8">
+            Login
+        </h1>
 
-                <input
-                type="password"
-                placeholder="******"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 border rounded"
-                required
-                />
+        <form onSubmit={handleSubmit} className="space-y-5">
+            <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="
+                w-full
+                bg-black/40
+                border border-white/20
+                rounded-lg
+                px-4 py-2
+                text-zinc-200
+                placeholder-zinc-500
+                focus:outline-none
+                focus:border-white/40
+            "
+            required
+            />
 
-                {error && (
-                <p className="text-red-600 text-sm">{error}</p>
-                )}
+            <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="
+                w-full
+                bg-black/40
+                border border-white/20
+                rounded-lg
+                px-4 py-2
+                text-zinc-200
+                placeholder-zinc-500
+                focus:outline-none
+                focus:border-white/40
+            "
+            required
+            />
 
-                <button
-                type="submit"
-                className="w-full bg-black text-white py-2 rounded"
-                >
-                Login
-                </button>
-            </form>
+            {error && (
+            <p className="text-xs tracking-wide text-zinc-300 text-center">
+                {error}
+            </p>
+            )}
+
+            <button
+            type="submit"
+            className="
+                w-full
+                mt-2
+                py-2
+                rounded-full
+                border border-white/30
+                text-zinc-100
+                tracking-widest
+                hover:bg-white/10
+                transition
+            "
+            >
+            LOGIN
+            </button>
+        </form>
         </div>
+    </div>
     );
 }
 

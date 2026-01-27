@@ -86,65 +86,126 @@ function EditorReviewDetail() {
   const poster = review.posterUrl || review.movie.posterUrl;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex gap-6">
-        <img
-          src={poster}
-          alt={review.movie.title}
-          className="w-40 aspect-[2/3] object-cover rounded-lg"
-        />
+  <div className="max-w-4xl mx-auto px-6 py-12 space-y-10">
+    {/* Header */}
+    <div className="flex gap-8 items-start">
+      <img
+        src={poster}
+        alt={review.movie.title}
+        className="
+          w-44
+          aspect-[2/3]
+          object-cover
+          rounded-xl
+          shadow-[0_10px_40px_rgba(0,0,0,0.6)]
+        "
+      />
 
-        <div>
-          <h1 className="text-2xl font-serif font-semibold">
-            {review.movie.title}
-          </h1>
-          <p className="text-sm text-zinc-500">
-            by {review.author?.name}
-          </p>
-          <p className="mt-2">⭐ {review.rating} / 10</p>
-          <p className="mt-1 text-sm text-amber-600">
-            Status: {review.status}
-          </p>
+      <div className="space-y-2">
+        <h1 className="text-3xl font-serif tracking-wide text-zinc-100">
+          {review.movie.title}
+        </h1>
+
+        <p className="text-sm text-zinc-400">
+          by {review.author?.name}
+        </p>
+
+        <div className="flex gap-6 text-sm text-zinc-300 mt-4">
+          <span>⭐ {review.rating} / 10</span>
+          <span className="capitalize tracking-wide">
+            {review.status.replace("-", " ")}
+          </span>
         </div>
       </div>
+    </div>
 
-      {/* Review Content */}
-      <div className="bg-white rounded-lg p-4 shadow">
-        <p className="whitespace-pre-wrap">{review.content}</p>
-      </div>
+    {/* Review Content — Glass */}
+    <div
+      className="
+        relative
+        rounded-2xl
+        p-10
+        backdrop-blur-xl
+        bg-gradient-to-br
+        from-white/10 via-white/5 to-white/10
+        border border-white/20
+        shadow-[0_20px_60px_rgba(0,0,0,0.6)]
+      "
+    >
+      <p className="text-zinc-200 leading-relaxed whitespace-pre-line font-serif">
+        {review.content}
+      </p>
+    </div>
 
-      {/* Actions */}
-      {review.status === "in-review" && (
-        <div className="flex gap-4">
+    {/* Editor Actions */}
+    {review.status === "in-review" && (
+      <div className="space-y-4">
+        {/* Reject reason */}
+        <div className="space-y-1">
+          <label className="text-xs tracking-widest text-zinc-400 uppercase">
+            Rejection Feedback
+          </label>
+          <textarea
+            rows="3"
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            placeholder="Provide feedback for the critic…"
+            className="
+              w-full
+              bg-black/40
+              border border-white/20
+              rounded-lg
+              px-4 py-3
+              text-zinc-100
+              placeholder-zinc-500
+              focus:outline-none
+              focus:border-white/40
+              resize-none
+            "
+          />
+        </div>
+
+        {/* Buttons */}
+        <div className="flex justify-end gap-4">
           <button
             onClick={handleApprove}
-            className="bg-green-600 text-white px-6 py-2 rounded"
+            className="
+              px-5 py-2
+              text-xs
+              tracking-widest
+              uppercase
+              rounded-full
+              border border-white/30
+              text-zinc-100
+              hover:bg-white/15
+              transition
+            "
           >
             Approve
           </button>
 
           <button
             onClick={handleReject}
-            className="bg-red-600 text-white px-6 py-2 rounded"
+            className="
+              px-5 py-2
+              text-xs
+              tracking-widest
+              uppercase
+              rounded-full
+              border border-white/15
+              text-zinc-300
+              hover:bg-white/5
+              transition
+            "
           >
             Reject
           </button>
         </div>
-      )}
+      </div>
+    )}
+  </div>
+);
 
-      {/* Reject reason input */}
-      {review.status === "in-review" && (
-        <textarea
-          rows="3"
-          placeholder="Rejection reason (required)"
-          value={rejectReason}
-          onChange={(e) => setRejectReason(e.target.value)}
-          className="w-full border rounded px-3 py-2"
-        />
-      )}
-    </div>
-  );
 }
 
 export default EditorReviewDetail;

@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.metallic-text {
+  background: linear-gradient(
+    120deg,
+    #f9f9f9 0%,
+    #e6e6e6 18%,
+    #ffffff 32%,
+    #cfcfcf 50%,
+    #f2f2f2 65%,
+    #bdbdbd 82%,
+    #f0f0f0 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  text-shadow:
+    0 0 8px rgba(255,255,255,0.25),
+    0 0 20px rgba(255,255,255,0.15),
+    0 2px 2px rgba(0,0,0,0.7);
+}

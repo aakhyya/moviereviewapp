@@ -72,8 +72,8 @@ function CriticReviews() {
   const published = reviews.filter(r => r.status === "published");
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-12">
-      <h1 className="text-2xl font-semibold">My Reviews</h1>
+    <div className="max-w-6xl mx-auto px-6 py-10 space-y-14">
+      <h1 className="text-xl font-serif tracking-widest text-zinc-200">My Reviews</h1>
 
       {/* Drafts */}
       <Section
@@ -83,14 +83,14 @@ function CriticReviews() {
           <div className="flex gap-4 mt-2">
             <button
               onClick={() => navigate(`/critic/review/edit/${review._id}`)}
-              className="text-sm underline"
+              className="text-xs tracking-wide underline text-zinc-300 hover:text-zinc-100"
             >
               Edit
             </button>
 
             <button
               onClick={() => submitReview(review._id)}
-              className="text-sm text-green-500 underline"
+              className="text-xs tracking-wide underline text-zinc-300 hover:text-zinc-100"
             >
               Submit for review
             </button>
@@ -110,23 +110,21 @@ function CriticReviews() {
       />
 
       {/* Rejected */}
-      <Section
-        title="Rejected"
-        reviews={rejected}
-        renderExtra={(review) => (
-          <>
-            <p className="text-sm text-red-500 mt-2">
-              Reason: {review.rejectedreason}
-            </p>
-            <button
-              onClick={() => navigate(`/critic/review/edit/${review._id}`)}
-              className="mt-2 text-sm underline"
-            >
-              Edit & Resubmit
-            </button>
-          </>
-        )}
-      />
+<Section
+  title="Rejected"
+  reviews={rejected}
+  renderExtra={(review) => (
+    <>
+      {/* Bottom reason */}
+      {review.rejectedreason && (
+        <p className="mt-3 text-xs text-zinc-400 italic">
+          Reason: {review.rejectedreason}
+        </p>
+      )}
+    </>
+  )}
+/>
+
 
       {/* Published */}
       <Section title="Published" reviews={published} />
@@ -139,8 +137,8 @@ function Section({ title, reviews, renderExtra }) {
 
   return (
     <section>
-      <h2 className="text-xl font-medium mb-4">{title}</h2>
-      <div className="space-y-4">
+      <h2 className="text-sm tracking-widest text-zinc-400 mb-6">{title.toUpperCase()}</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {reviews.map((review) => (
           <ReviewCard key={review._id} review={review}>
             {renderExtra && renderExtra(review)}
