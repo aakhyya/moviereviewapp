@@ -50,6 +50,10 @@ function CreateReview() {
         if (!res.ok) return;
 
         const draft = await res.json();
+        if (!draft) {
+          setLoading(false);
+          return;
+        }
 
         setReviewId(draft._id);
         setRating(draft.rating || "");
@@ -102,28 +106,53 @@ function CreateReview() {
 
   // 🔹 Submit for review
   async function handleSubmit(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      setSubmitting(true);
+  try {
+    setSubmitting(true);
 
-      await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/review/${reviewId}/submit`,
+    let id = reviewId;
+
+    // 🔴 CRITICAL FIX
+    if (!id) {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/review/movie/${movieId}`,
         {
           method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          body: JSON.stringify({ rating, content, posterUrl }),
         }
       );
 
-      navigate("/critic/reviews");
-    } catch {
-      setError("Submission failed");
-    } finally {
-      setSubmitting(false);
+      if (!res.ok) throw new Error("Failed to create draft");
+
+      const created = await res.json();
+      id = created._id;
+      setReviewId(id);
     }
+
+    // ✅ NOW submit
+    await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/review/${id}/submit`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    navigate("/critic/reviews");
+  } catch (err) {
+    setError("Submission failed",err);
+  } finally {
+    setSubmitting(false);
   }
+}
+
 
   if (loading || !movie) {
     return <p className="text-center text-zinc-500">Loading…</p>;
@@ -243,7 +272,7 @@ function CreateReview() {
 
       {/* Submit */}
       <button
-        disabled={submitting}
+        disabled={!rating || !content || submitting}
         className="
           w-full
           mt-4

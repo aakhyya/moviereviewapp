@@ -17,13 +17,11 @@ const {
     getInReviews, 
     updateReview,
     getReviewForEdit, 
-    getReviewForEditor,
-    getExistingDrafts
+    getReviewForEditor
 }=require("../controllers/review.controllers")
 
 //critic
 router.get("/mine",requireAuth,requireRole("critic"),getMyReviews);
-router.get("/draft/:movieId", requireAuth, requireRole("critic"),getExistingDrafts);
 router.get("/rejected", requireAuth,requireRole("critic"),getRejectedreviews);
 router.get("/:id/edit",requireAuth,requireRole("critic"),getReviewForEdit);
 router.post("/movie/:movieId", requireAuth,requireRole("critic"),createReview);

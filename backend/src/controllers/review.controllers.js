@@ -28,54 +28,71 @@ async function createReview(req,res) {
     res.status(201).json(review);
 }
 //2. submit for review
-async function submitReview(req,res) {
-    const review=await Review.findById(req.params.id).populate("movie");
-    if(!review){
-        return res.status(404).json({
-            error:"Review not found!"
-        });
-    }
-    if(review.author.toString()!==req.user.id){
-        return res.status(403).json({
-            error:"Access denied! Not your review!"
-        });
-    }
-    if (review.status !== "draft") {
-        return res.status(400).json({
-            error: "Only drafts can be submitted for review!"
-        });
-    }
+async function submitReview(req, res) {
+    const { id } = req.params;
 
-    review.status="in-review";
-    await review.save();
-    await Audit.create({
-        actor:req.user.id,
-        action:"REVIEW_SUBMITTED",
-        entityType:"Review",
-        entityId:review._id,
-        metadata:{
-            previousStatus:"draft"
-        }
+  if (!id || id === "null") {
+    return res.status(400).json({
+      error: "Invalid review id",
     });
-    return res.json({
-        message:"Draft is in-review stage."
+  }
+
+  const review = await Review.findById(id);
+  if (!review) {
+    return res.status(404).json({ error: "Review not found" });
+  }
+  if (review.author.toString() !== req.user.id)
+    return res.status(403).json({ error: "Not your review" });
+  if (review.status !== "draft")
+    return res.status(400).json({ error: "Only drafts can be submitted" });
+
+  if (!review.rating || !review.content) {
+    return res.status(400).json({
+      error: "Rating and content required before submission",
     });
+  }
+
+  await Review.findByIdAndUpdate(
+    review._id,
+    { status: "in-review" },
+    { runValidators: false }
+  );
+//.save() re-validates every required field, even ones you didn’t change.
+  await Audit.create({
+    actor: req.user.id,
+    action: "REVIEW_SUBMITTED",
+    entityType: "Review",
+    entityId: review._id,
+  });
+
+  res.json({ message: "Draft submitted for review" });
 }
+
 //3. see my own reviews
-async function getMyReviews(req,res){
-    const reviews=await Review.find({
-        author:req.user.id
-    })
+async function getMyReviews(req, res) {
+  const reviews = await Review.find({
+    author: req.user.id,
+  })
     .populate("author", "name")
     .populate("movie")
-    .sort({createdAt:-1});
+    .sort({ createdAt: -1 });
 
-    if (reviews.length === 0) {
-        return res.json([]);
-    }
+  // Normalize response so frontend always gets `movie`
+  const normalizedReviews = reviews.map((review) => {
+  const r = review.toObject();
 
-    res.json(reviews);
+  if (!r.movie && r.movietitle) {
+    r.movie = {
+      title: r.movietitle,
+      posterUrl: null,
+    };
+  }
+
+  return r;
+});
+  res.json(normalizedReviews);
 }
+
 //4. see their rejected reviews
     async function getRejectedreviews(req,res){
         const reviews=await Review.find({
@@ -187,34 +204,16 @@ async function getReviewForEdit(req,res) {
     }
 
     // Only rejected reviews can be edited
-    if (review.status !== "rejected") {
-        return res.status(400).json({
-            error: "Only rejected reviews can be edited"
-        });
-    }
+    if (!["draft", "rejected"].includes(review.status)) {
+  return res.status(400).json({
+    error: "Only draft or rejected reviews can be edited"
+  });
+}
+
 
     res.json(review);
 }
-//8. GET existing draft for movie (or create one)
-async function getExistingDrafts(req,res){
-    const { movieId } = req.params;
 
-    let draft = await Review.findOne({
-        movie: movieId,
-        author: req.user.id,
-        status: "draft"
-    });
-
-    if (!draft) {
-        draft = await Review.create({
-            movie: movieId,
-            author: req.user.id,
-            status: "draft"
-        });
-    }
-
-    res.json(draft);
-}
 
 //EDITOR 
 //1. approve review
@@ -368,4 +367,4 @@ async function getReviewbyId(req,res){
 
 module.exports={getPublishedReviews, getReviewbyId,
                 approveReview,archiveReview,rejectReview,getInReviews,getReviewForEditor,
-                createReview,submitReview,getMyReviews,getRejectedreviews,resubmitReview,updateReview,getReviewForEdit,getExistingDrafts};
+                createReview,submitReview,getMyReviews,getRejectedreviews,resubmitReview,updateReview,getReviewForEdit};

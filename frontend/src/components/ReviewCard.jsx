@@ -12,10 +12,9 @@ function ReviewCard({ review, children }) {
     views = 0,
     status,
   } = review;
-  if (!movie) return null;
-  
 
-  const poster = review.posterUrl || review.movie.posterUrl;
+  const movieTitle = movie?.title || review.movietitle || "Untitled Draft";
+  const poster = review.posterUrl || movie?.posterUrl;
   
 
   return (
@@ -45,7 +44,7 @@ function ReviewCard({ review, children }) {
           {poster ? (
             <img
               src={poster}
-              alt={movie.title}
+              alt={movieTitle}
               className="
                 h-full w-full object-cover
                 transition-transform duration-500
@@ -69,8 +68,8 @@ function ReviewCard({ review, children }) {
         <div className="flex items-start justify-between gap-2">
   <Link to={`/review/${_id}`} className="block">
     <h3 className="font-serif text-base font-semibold leading-snug text-zinc-100">
-      {movie.title}
-    </h3>
+  {movieTitle}
+</h3>
   </Link>
 
   {status === "rejected" && (

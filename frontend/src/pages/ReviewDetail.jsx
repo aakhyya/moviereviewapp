@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 function ReviewDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { role } = useAuth();
 
   const [review, setReview] = useState(null);
@@ -14,7 +13,7 @@ function ReviewDetail() {
     async function fetchReview() {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/review/${id}`,
+          `${import.meta.env.VITE_API_BASE_URL}/review/${id}/edit`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -48,13 +47,6 @@ function ReviewDetail() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
-      {/* Back */}
-      <button
-        onClick={() => navigate(-1)}
-        className="text-xs tracking-widest text-zinc-400 hover:text-zinc-200 transition"
-      >
-        ← BACK
-      </button>
 
       {/* HERO */}
       <div className="relative h-[300px] md:h-[360px] rounded-xl overflow-hidden">

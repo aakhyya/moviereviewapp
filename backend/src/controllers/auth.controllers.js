@@ -19,7 +19,8 @@ async function signupController(req,res) {
         const user=await User.create({
             name,
             email,
-            password
+            password,
+            authProvider: "local",
         });
         await Audit.create({
             actor: user._id,
@@ -59,6 +60,11 @@ async function loginController(req,res){
         if(!user){
             return res.status(401).json({
                 error:"Invalid email or password",
+            });
+        }
+        if (user.authProvider === "google") {
+            return res.status(400).json({
+                error: "Please login using Google",
             });
         }
         const ismatch=await user.matchPassword(password);

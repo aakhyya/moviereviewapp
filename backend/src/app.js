@@ -1,8 +1,11 @@
 const express=require("express");
 const cors=require("cors");
+const passport = require("passport");
+require("./config/passport");
 const app=express();
 app.use(express.json());
 app.use(cors());
+app.use(passport.initialize());
 
 const healthroute=require("./routes/health.routes");
 const authroute=require("./routes/auth.routes");
@@ -27,3 +30,5 @@ module.exports=app;
 //3. critic1 critic1@gmail.com 123 : critic
 //4. critic2 critic2@gmail.com 123 : critic
 //5. editor editor@gmail.com 123 : editor
+
+//Critic, critic3@gmail.com, 123456789 

@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import ReviewCard from "../components/ReviewCard";
 import { useNavigate } from "react-router-dom";
-
 function CriticReviews() {
+  const navigate=useNavigate();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchMyReviews() {
@@ -81,19 +80,44 @@ function CriticReviews() {
         reviews={drafts}
         renderExtra={(review) => (
           <div className="flex gap-4 mt-2">
-            <button
-              onClick={() => navigate(`/critic/review/edit/${review._id}`)}
-              className="text-xs tracking-wide underline text-zinc-300 hover:text-zinc-100"
-            >
-              Edit
-            </button>
-
-            <button
-              onClick={() => submitReview(review._id)}
-              className="text-xs tracking-wide underline text-zinc-300 hover:text-zinc-100"
-            >
-              Submit for review
-            </button>
+         <button
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/movies/${review.movie._id}/review`);
+  }}
+  className="
+    text-xs
+    px-3 py-1
+    rounded-full
+    border border-white/25
+    text-zinc-200
+    hover:bg-white/10
+    transition
+  "
+>
+  Edit
+</button>
+            {review._id && (
+  <button
+    onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      submitReview(review._id);
+    }}
+    className="
+      text-xs
+      px-3 py-1
+      rounded-full
+      border border-white/25
+      text-zinc-200
+      hover:bg-white/10
+      transition
+    "
+  >
+    Submit
+  </button>
+)}
           </div>
         )}
       />

@@ -12,17 +12,20 @@ import CreateReview from "./pages/CreateReview";
 import EditReview from "./pages/EditReview";
 import Movies from "./pages/Movies";
 import EditorReviewDetail from "./pages/EditorReviewDetail";
+import Footer from "./components/Footer";
+import Signup from "./pages/Signup";
+import AuthSuccess from "./pages/AuthSuccess";
 
 function App() {
   return (
-    <div className="min-h-screen text-textPrimary"
+    <div className="min-h-screen flex flex-col text-textPrimary"
     style={{
     background:
       "linear-gradient(to top, oklch(37% 0.013 285.805) , oklch(20.5% 0 0)"
     }}>
       <Navbar/>
       
-      <main className="max-w-6xl mx-auto px-6 py-10 bg-transparent">
+      <main className="flex-1 relative z-10 max-w-6xl mx-auto px-6 py-10 w-full">
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/review/:id" element={<ReviewDetail/>}/>
@@ -31,6 +34,13 @@ function App() {
               <Login/>
             </PublicRoute>
           }/>
+          <Route path="/signup" element={
+            <PublicRoute>
+              <Signup/>
+            </PublicRoute>
+          }/>
+          <Route path="/auth/success" element={<AuthSuccess/>} />
+
 
            {/* movies */}
           <Route path="/movies" element={<Movies />} />
@@ -75,6 +85,8 @@ function App() {
           />
         </Routes>
       </main>
+
+      <Footer/>
     </div>
   );
 }

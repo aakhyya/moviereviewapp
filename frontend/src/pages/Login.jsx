@@ -41,6 +41,10 @@ function Login(){
         }
     }
 
+    function handleGoogleLogin() {
+        window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
+    }
+
     return(
          <div className="min-h-screen flex items-center justify-center px-4">
         <div
@@ -121,6 +125,35 @@ function Login(){
             LOGIN
             </button>
         </form>
+        {/* Visual Separator */}
+        <div className="my-6 flex items-center gap-4">
+            <div className="flex-1 h-px bg-white/20" />
+                <span className="text-xs text-zinc-400 tracking-widest">OR</span>
+            <div className="flex-1 h-px bg-white/20" />
+        </div>
+        <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="
+                w-full
+                py-2
+                rounded-full
+                border border-white/30
+                text-zinc-100
+                tracking-widest
+                hover:bg-white/10
+                transition
+                flex items-center justify-center gap-3
+            "
+            >
+            <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/500px-Google_%22G%22_logo.svg.png"
+                alt="Google"
+                className="w-4 h-4"
+            />
+                CONTINUE WITH GOOGLE
+            </button>
+
         </div>
     </div>
     );
