@@ -4,8 +4,6 @@ function StatusBadge({ status }) {
       "border-green-500/40 text-zinc-100 hover:bg-white-200/10",
     "in-review":
       "border-yellow-500/40 text-zinc-200 hover:bg-white-200/10",
-    draft:
-      "border-zinc-500/40 text-zinc-300 hover:bg-white-200/10",
     rejected:
       "border-red-500/40 text-zinc-400 hover:bg-white-200/10",
     archived:

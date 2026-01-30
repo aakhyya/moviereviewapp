@@ -2,7 +2,6 @@ const passport=require("passport"); //Passport Engine
 const GoogleStrategy=require("passport-google-oauth20").Strategy; //OAuth 2.0 based authentication startegy
 const User=require("../models/user");
 const Audit=require("../models/auditlog");
-console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID)
 
 
 passport.use(

@@ -86,10 +86,22 @@ function Navbar() {
                   <Link to="/editor" className="opacity-80 hover:opacity-100 transition">
                     Editor
                   </Link>
+                  <Link
+                      to="/editor/request-critic"
+                      className="opacity-80 hover:opacity-100 transition"
+                  >
+                      Critic Requests
+                  </Link>
                   <Link to="/editor/audit" className="opacity-80 hover:opacity-100 transition">
                     Audit
                   </Link>
                 </>
+              )}
+
+              {role === "viewer" && (
+                <Link to="/request-critic" className="opacity-80 hover:opacity-100">
+                  Become a Critic
+                </Link>
               )}
 
               <button

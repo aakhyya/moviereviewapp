@@ -7,21 +7,21 @@ app.use(express.json());
 app.use(cors());
 app.use(passport.initialize());
 
-const healthroute=require("./routes/health.routes");
 const authroute=require("./routes/auth.routes");
 const testroute=require("./routes/test.routes");
 const reviewroute=require("./routes/review.routes");
 const analyticsroute=require("./routes/analytics.routes");
 const auditroute=require("./routes/audit.routes");
 const movieroute=require("./routes/movie.routes");
+const criticRequest=require("./routes/criticRequest.routes");
 
-app.use("/api",healthroute);
 app.use("/api/auth",authroute);
 app.use("/api/test",testroute);
 app.use("/api/review",reviewroute);
 app.use("/api/analytics",analyticsroute);
 app.use("/api/audit",auditroute);
 app.use("/api/movie",movieroute);
+app.use("/api/critic-request",criticRequest);
 
 module.exports=app;
 
@@ -32,3 +32,4 @@ module.exports=app;
 //5. editor editor@gmail.com 123 : editor
 
 //Critic, critic3@gmail.com, 123456789 
+//Tester, tester@gmail.com, 123456789

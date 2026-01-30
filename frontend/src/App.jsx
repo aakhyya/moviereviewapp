@@ -15,6 +15,8 @@ import EditorReviewDetail from "./pages/EditorReviewDetail";
 import Footer from "./components/Footer";
 import Signup from "./pages/Signup";
 import AuthSuccess from "./pages/AuthSuccess";
+import RequestCritic from "./pages/RequestCritic";
+import EditorCriticRequest from "./pages/EditorCriticRequest";
 
 function App() {
   return (
@@ -40,6 +42,11 @@ function App() {
             </PublicRoute>
           }/>
           <Route path="/auth/success" element={<AuthSuccess/>} />
+          <Route path="request-critic" element={
+            <ProtectedRoute roles={["viewer"]}>
+                <RequestCritic />
+              </ProtectedRoute>
+          }/>
 
 
            {/* movies */}
@@ -70,6 +77,11 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/editor/request-critic" element={
+            <ProtectedRoute roles={["editor"]}>
+                <EditorCriticRequest/>
+              </ProtectedRoute>
+          }/>
 
           {/* critic */}
           <Route path="/critic/reviews" element={
