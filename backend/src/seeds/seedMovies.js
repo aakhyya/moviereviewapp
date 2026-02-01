@@ -114,27 +114,6 @@ const movies = [
     posterUrl: "https://image.tmdb.org/t/p/w500/btbRB7BrD887j5NrvjxceRDmaot.jpg",
     description: "A programmer tests an AI with human traits."
   },
-
-  // Indian Cinema (important)
-  {
-    title: "Andhadhun",
-    releaseYear: 2018,
-    posterUrl: "https://image.tmdb.org/t/p/w500/2H7kNShT0oDg0J4e9Yl7pZ2E1V0.jpg",
-    description: "A blind pianist gets entangled in a crime."
-  },
-  {
-    title: "Lunchbox",
-    releaseYear: 2013,
-    posterUrl: "https://image.tmdb.org/t/p/w500/9rqZ3F1fXrF75PwQyQp2gC5W0hY.jpg",
-    description: "A mistaken lunchbox delivery sparks a relationship."
-  },
-  {
-    title: "Gangs of Wasseypur",
-    releaseYear: 2012,
-    posterUrl: "https://image.tmdb.org/t/p/w500/l9E7M1aT5Pp4Xn1D7jF0mE7bP5y.jpg",
-    description: "A multi-generational crime saga in India."
-  },
-
   // Extra depth for pagination
   {
     title: "The Social Network",

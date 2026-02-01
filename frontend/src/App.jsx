@@ -17,6 +17,7 @@ import Signup from "./pages/Signup";
 import AuthSuccess from "./pages/AuthSuccess";
 import RequestCritic from "./pages/RequestCritic";
 import EditorCriticRequest from "./pages/EditorCriticRequest";
+import EditorAddMovie from "./pages/EditorAddMovie";
 
 function App() {
   return (
@@ -81,6 +82,11 @@ function App() {
             <ProtectedRoute roles={["editor"]}>
                 <EditorCriticRequest/>
               </ProtectedRoute>
+          }/>
+          <Route path="editor/movies/new" element={
+            <ProtectedRoute roles={["editor"]}>
+              <EditorAddMovie/>
+            </ProtectedRoute>
           }/>
 
           {/* critic */}

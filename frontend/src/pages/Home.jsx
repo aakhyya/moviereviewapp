@@ -25,14 +25,42 @@ function Home(){
     return (
   <div className="relative space-y-10">
     {/* Page header */}
-    <div className="text-center space-y-2">
-      <h1 className="text-xl font-serif tracking-widest text-zinc-200">
-        LATEST REVIEWS
-      </h1>
-      <p className="text-xs text-zinc-400 tracking-wide">
-        Curated film criticism
-      </p>
-    </div>
+    <div className="relative inline-block">
+  <h2
+    className="
+      relative z-10
+      text-xl md:text-3xl
+      font-serif
+      tracking-[0.2em]
+      text-zinc-100
+    "
+  >
+    LATEST REVIEWS
+  </h2>
+
+  {/* soft glow */}
+  <span
+    className="
+      absolute inset-0
+      blur-xl
+      opacity-40
+      bg-gradient-to-r
+      from-sky-300/20 via-white/10 to-sky-300/20
+    "
+  />
+</div>
+
+<p
+  className="
+    mt-2
+    text-xs
+    tracking-[0.4em]
+    uppercase
+    text-zinc-400/80
+  "
+>
+  Curated Film Criticism
+</p>
 
     {/* Grid */}
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
